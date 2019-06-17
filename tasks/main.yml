@@ -1,6 +1,11 @@
 ---
 # tasks file for ansible-role-dehydrated
 
+- name: Make sure openssl is installed
+  package:
+    name: openssl
+    state: present
+
 - name: Make sure that contact email is defined
   fail:
     msg: Please define variable dehydrated_contact_email
