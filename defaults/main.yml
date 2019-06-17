@@ -1,0 +1,15 @@
+---
+# defaults file for ansible-role-dehydrated
+
+dehydrated_config_dir: "/etc/dehydrated"
+
+dehydrated_wellknown_dir: "/var/www/dehydrated"
+
+dehydrated_certs_dir: "{{ dehydrated_config_dir }}/certs"
+
+dehydrated_version: "master"
+
+dehydrated_contact_email: "dummy@dummy.com"
+
+dehydrated_domains:
+  - "{{ ansible_fqdn }}"

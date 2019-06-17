@@ -1,0 +1,54 @@
+---
+# tasks file for ansible-role-dehydrated
+
+- name: Make sure that contact email is defined
+  fail:
+    msg: Please define variable dehydrated_contact_email
+  when: dehydrated_contact_email == "dummy@dummy.com"
+
+- name: Create config directory {{ dehydrated_config_dir }}
+  file:
+    path: "{{ dehydrated_config_dir }}"
+    state: directory
+    mode: 0755
+
+- name: ensure that WELLKNOWN directory {{ dehydrated_wellknown_dir }} exist
+  file:
+    path: "{{ dehydrated_wellknown_dir }}"
+    state: directory
+    mode: 0755
+
+- name: download dehydrated script to /usr/local/bin/
+  get_url:
+    dest: /usr/local/bin/dehydrated
+    url: https://raw.githubusercontent.com/lukas2511/dehydrated/{{ dehydrated_version }}/dehydrated
+    backup: true
+    owner: root
+    group: root
+    mode: 0755
+  # notify: dehydrated changed
+
+- name: Deploy dehydrated configuration
+  template:
+    src: dehydrated-config.j2
+    dest: "{{ dehydrated_config_dir }}/config"
+    owner: root
+    group: root
+    mode: 0644
+  # notify: dehydrated changed
+
+- name: Deploy domain list for dehydrated
+  template:
+    src: dehydrated-domains.txt.j2
+    dest: "{{ dehydrated_config_dir }}/domains.txt"
+    owner: root
+    group: root
+    mode: 0644
+  # notify: dehydrated changed
+
+- name: Add dehydrated to crontab
+  cron:
+    name: "renew certificates"
+    special_time: daily
+    state: present
+    job: "/usr/local/bin/dehydrated -g -c -f {{ dehydrated_config_dir }}/config"
