@@ -9,6 +9,8 @@ dehydrated_certs_dir: "{{ dehydrated_config_dir }}/certs"
 
 dehydrated_version: "master"
 
+dehydrated_install_dir: "/usr/local/bin"
+
 dehydrated_contact_email: "dummy@dummy.com"
 
 dehydrated_domains:

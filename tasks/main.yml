@@ -18,15 +18,15 @@
     state: directory
     mode: 0755
 
-- name: download dehydrated script to /usr/local/bin/
+- name: download dehydrated script to {{ dehydrated_install_dir }}
   get_url:
-    dest: /usr/local/bin/dehydrated
+    dest: "{{ dehydrated_install_dir }}/dehydrated"
     url: https://raw.githubusercontent.com/lukas2511/dehydrated/{{ dehydrated_version }}/dehydrated
     backup: true
     owner: root
     group: root
     mode: 0755
-  # notify: dehydrated changed
+  notify: dehydrated changed
 
 - name: Deploy dehydrated configuration
   template:
@@ -35,7 +35,7 @@
     owner: root
     group: root
     mode: 0644
-  # notify: dehydrated changed
+  notify: dehydrated changed
 
 - name: Deploy domain list for dehydrated
   template:
@@ -44,11 +44,11 @@
     owner: root
     group: root
     mode: 0644
-  # notify: dehydrated changed
+  notify: dehydrated changed
 
 - name: Add dehydrated to crontab
   cron:
     name: "renew certificates"
     special_time: daily
     state: present
-    job: "/usr/local/bin/dehydrated -g -c -f {{ dehydrated_config_dir }}/config"
+    job: "{{ dehydrated_install_dir }}/dehydrated -g -c -f {{ dehydrated_config_dir }}/config"
