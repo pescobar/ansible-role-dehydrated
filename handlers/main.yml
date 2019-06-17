@@ -4,9 +4,11 @@
   shell: "{{ dehydrated_install_dir }}/dehydrated --register --accept-terms"
   tags:
     - skip_ansible_lint
+  when: no_test is not defined  # workaround to disable the handlers in CI
 
 - name: generate certificate
   listen: dehydrated changed
   shell: "{{ dehydrated_install_dir }}/dehydrated -g -c -f {{ dehydrated_config_dir }}/config"
   tags:
     - skip_ansible_lint
+  when: no_test is not defined  # workaround to disable the handlers in CI

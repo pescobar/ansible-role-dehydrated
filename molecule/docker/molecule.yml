@@ -19,7 +19,7 @@ provisioner:
   name: ansible
   options:
     become: true
-    e: dehydrated_contact_email=testing@testing.com
+    e: dehydrated_contact_email=testing@testing.com -e no_test=true
   lint:
     name: ansible-lint
     options:
