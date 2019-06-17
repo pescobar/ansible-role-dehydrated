@@ -53,7 +53,7 @@
 
 - name: Add dehydrated to crontab
   cron:
-    name: "renew certificates"
+    name: "renew letsencrypt ssl certificates"
     special_time: daily
     state: present
     job: "{{ dehydrated_install_dir }}/dehydrated -g -c -f {{ dehydrated_config_dir }}/config"
