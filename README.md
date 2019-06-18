@@ -35,7 +35,8 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
 
   vars:
 
-    # required by [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache) so ssl vhosts are only configured when the ssl certificate exists.
+    # this var is required by role "geerlingguy.apache" so ssl vhosts 
+    # are only configured when the ssl certificate exists.
     apache_ignore_missing_ssl_certificate: false
 
     apache_global_vhost_settings: |
