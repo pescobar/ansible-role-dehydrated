@@ -25,6 +25,46 @@ dehydrated_domains:
   - "{{ ansible_fqdn }}"
 ```
 
+Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache)
+---------------
+```
+- name: Configure webserver with ssl
+  hosts: webserver
+  gather_facts: True
+  remote_user: root
+
+  vars:
+
+    # required by [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache) so ssl vhosts are only configured when the ssl certificate exists.
+    apache_ignore_missing_ssl_certificate: false
+
+    apache_global_vhost_settings: |
+      DirectoryIndex index.php index.html
+      Alias /.well-known/acme-challenge/ {{ dehydrated_wellknown_dir }}
+      <Directory {{ dehydrated_wellknown_dir }} >
+          Require all granted
+      </Directory>
+
+    dehydrated_contact_email: "myemail@foo.com"
+
+  tasks:
+
+    - name: Configure apache webserver (no ssl yet)
+      import_role:
+        name: geerlingguy.apache
+
+    - name: Install dehydrated
+      import_role:
+        name: ansible-role-dehydrated
+
+    # execute dehydrated handlers so the ssl certs are downloaded
+    - meta: flush_handlers
+
+    - name: Install apache webserver (configure ssl vhosts)
+      import_role:
+        name: geerlingguy.apache
+```
+
 License
 -------
 
