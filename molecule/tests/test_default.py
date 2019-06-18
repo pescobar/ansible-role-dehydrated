@@ -12,7 +12,7 @@ def test_dehydrated_config(host):
     assert f.is_file
     assert f.user == 'root'
     assert f.group == 'root'
-    assert oct(f.mode) == '0644'
+    assert oct(f.mode) == '0o644'
     assert f.contains('CONTACT_EMAIL')
 
 
@@ -22,7 +22,7 @@ def test_dehydrated_domains_file(host):
     assert f.is_file
     assert f.user == 'root'
     assert f.group == 'root'
-    assert oct(f.mode) == '0644'
+    assert oct(f.mode) == '0o644'
 
 
 def test_dehydrated_script(host):
@@ -31,4 +31,4 @@ def test_dehydrated_script(host):
     assert f.is_file
     assert f.user == 'root'
     assert f.group == 'root'
-    assert oct(f.mode) == '0755'
+    assert oct(f.mode) == '0o755'
