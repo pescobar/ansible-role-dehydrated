@@ -25,7 +25,7 @@ dehydrated_domains:
   - "{{ ansible_fqdn }}"
 ```
 
-Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache)
+Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache))
 ---------------
 ```
 - name: Configure webserver with ssl
