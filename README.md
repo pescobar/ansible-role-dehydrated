@@ -43,9 +43,9 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
 
   vars:
 
-    # this var is required by role "geerlingguy.apache" so ssl vhosts
-    # are only configured when the ssl certificate exists.
-    apache_ignore_missing_ssl_certificate: false
+    dehydrated_contact_email: "myemail@foo.com"
+
+    vhost_public_domain: mycoolweb.com
 
     apache_global_vhost_settings: |
       DirectoryIndex index.php index.html
@@ -54,22 +54,45 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
           Require all granted
       </Directory>
 
-    dehydrated_contact_email: "myemail@foo.com"
+    apache_vhosts:
+      - servername: "{{ vhost_public_domain }}"
+        serveralias: "www.{{ vhost_public_domain }}"
+        serveradmin: "{{ dehydrated_contact_email }}"
+        documentroot: "/var/www/{{ vhost_public_domain }}"
+        extra_parameters: |
+
+          # redirect all traffic to https
+          RewriteEngine On
+          RewriteCond %{HTTPS} off
+          RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+
+    apache_vhosts_ssl:
+      - servername: "{{ vhost_public_domain }}"
+        serveralias: "www.{{ vhost_public_domain }}"
+        serveradmin: "{{ dehydrated_contact_email }}"
+        documentroot: "/var/www/{{ vhost_public_domain }}"
+        certificate_file: "{{ dehydrated_certs_dir }}/{{ vhost_public_domain }}/cert.pem"
+        certificate_key_file: "{{ dehydrated_certs_dir }}/{{ vhost_public_domain }}/privkey.pem"
+        certificate_chain_file: "{{ dehydrated_certs_dir }}/{{ vhost_public_domain }}/fullchain.pem"
+
+    # this var is required by role "geerlingguy.apache" so ssl vhosts
+    # are only configured when the ssl certificate exists.
+    apache_ignore_missing_ssl_certificate: false
 
   tasks:
 
-    - name: Configure apache webserver (no ssl yet)
+    - name: Install and configure apache webserver (no ssl yet)
       import_role:
         name: geerlingguy.apache
 
-    - name: Install dehydrated
+    - name: Install dehydrated letsencrypt/acme client
       import_role:
         name: ansible-role-dehydrated
 
     # execute dehydrated handlers so the ssl certs are downloaded
     - meta: flush_handlers
 
-    - name: Install apache webserver (configure ssl vhosts)
+    - name: Install con configure apache webserver (configure ssl vhosts)
       import_role:
         name: geerlingguy.apache
 ```
