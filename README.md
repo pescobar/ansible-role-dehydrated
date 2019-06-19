@@ -23,6 +23,14 @@ dehydrated_contact_email: "dummy@dummy.com"
 
 dehydrated_domains:
   - "{{ ansible_fqdn }}"
+
+dehydrated_hook_script_path: "{{ dehydrated_config_dir }}/hook.sh"
+
+# this is the command executed when a new cert is deployed
+# this command is defined in the function deploy_cert() in
+# the dehydrated hook script
+dehydrated_hook_deploy_cert_cmd: |
+  systemctl reload httpd
 ```
 
 Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerlingguy/apache))
@@ -35,7 +43,7 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
 
   vars:
 
-    # this var is required by role "geerlingguy.apache" so ssl vhosts 
+    # this var is required by role "geerlingguy.apache" so ssl vhosts
     # are only configured when the ssl certificate exists.
     apache_ignore_missing_ssl_certificate: false
 
