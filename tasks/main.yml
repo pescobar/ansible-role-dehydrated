@@ -51,6 +51,15 @@
     mode: 0644
   notify: dehydrated changed
 
+- name: Deploy the dehydrated hook script
+  template:
+    src: dehydrated-hook.sh.j2
+    dest: "{{ dehydrated_hook_script_path }}"
+    owner: root
+    group: root
+    mode: 0750
+  notify: dehydrated changed
+
 - name: Add dehydrated to crontab
   cron:
     name: "renew letsencrypt ssl certificates"
