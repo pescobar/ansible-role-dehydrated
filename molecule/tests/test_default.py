@@ -32,3 +32,13 @@ def test_dehydrated_script(host):
     assert f.user == 'root'
     assert f.group == 'root'
     assert oct(f.mode) == '0o755'
+
+
+def test_dehydrated_hook_script(host):
+    f = host.file('/etc/dehydrated/hook.sh')
+    assert f.exists
+    assert f.is_file
+    assert f.user == 'root'
+    assert f.group == 'root'
+    assert oct(f.mode) == '0o755'
+    assert f.contains('systemctl')
