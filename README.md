@@ -89,10 +89,11 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
       import_role:
         name: ansible-role-dehydrated
 
-    # execute dehydrated handlers so the ssl certs are downloaded
+    # execute handlers so apache enables the .well-known folder and
+    # dehydrated requests the ssl certificates
     - meta: flush_handlers
 
-    - name: Install con configure apache webserver (configure ssl vhosts)
+    - name: Install and configure apache webserver again (configure ssl vhosts)
       import_role:
         name: geerlingguy.apache
 ```
