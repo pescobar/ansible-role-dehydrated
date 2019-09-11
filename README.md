@@ -61,9 +61,10 @@ Example playbook (using [geerlingguy.apache](https://galaxy.ansible.com/geerling
         documentroot: "/var/www/{{ vhost_public_domain }}"
         extra_parameters: |
 
-          # redirect all traffic to https
+          # redirect all traffic to https except the letsencrypt requests
           RewriteEngine On
           RewriteCond %{HTTPS} off
+	  RewriteCond %{REQUEST_URI} !^/.well-known/
           RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 
     apache_vhosts_ssl:
